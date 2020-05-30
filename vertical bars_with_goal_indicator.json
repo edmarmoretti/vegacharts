@@ -1,0 +1,199 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 500,
+  "height": 180,
+  "padding": 5,
+  "background": "rgba(255, 255, 255, 0)",
+  "usermeta": {"embedOptions": {"renderer": "canvas", "actions": false}},
+  "data": [
+    {
+      "name": "table",
+      "values": [
+        {"year": 2015, "meta": 700000, "value": 800000},
+        {"year": 2016, "meta": 600000, "value": 700000},
+        {"year": 2017, "meta": 500000, "value": 300000},
+        {"year": 2018, "meta": 500000, "value": 900000},
+        {"year": 2019, "meta": 200000, "value": 500000}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "band",
+      "range": "width",
+      "domain": {"data": "table", "field": "year"},
+      "padding": 0.4
+    },
+    {
+      "name": "y",
+      "range": "height",
+      "nice": true,
+      "zero": true,
+      "domain": {"data": "table", "field": "value"}
+    },
+    {
+      "name": "ygrid",
+      "range": "height",
+      "nice": true,
+      "zero": true,
+      "domain": {"data": "table", "field": "value"}
+    },
+    {
+      "name": "xmeta",
+      "type": "point",
+      "range": "width",
+      "domain": {"data": "table", "field": "year"},
+      "padding": 0
+    },
+    {"name": "leg", "type": "point", "domain": ["meta"], "range": "width"}
+  ],
+  "axes": [
+    {
+      "orient": "bottom",
+      "scale": "x",
+      "zindex": 1,
+      "offset": 0,
+      "tickExtra": false,
+      "tickSize": 2,
+      "labelPadding": 5,
+      "labelFontSize": 10,
+      "domain": true,
+      "bandPosition": 0.5,
+      "domainCap": "square",
+      "domainColor": "black",
+      "domainWidth": 1
+    },
+    {
+      "orient": "left",
+      "scale": "y",
+      "zindex": 0,
+      "grid": false,
+      "labelPadding": 5,
+      "labelFontSize": 10,
+      "offset": 1,
+      "tickCount": 5,
+      "tickSize": 2,
+      "tickExtra": true,
+      "domainCap": "square",
+      "domainColor": "black",
+      "title": "Toneladas",
+      "titleAnchor": "end",
+      "titleAngle": 0,
+      "titleFontSize": 10,
+      "titleX": -6,
+      "titleY": -6
+    },
+    {
+      "orient": "right",
+      "scale": "ygrid",
+      "zindex": 0,
+      "grid": true,
+      "gridOpacity": 0.4,
+      "gridWidth": 1,
+      "gridDash": [2],
+      "domain": false,
+      "labels": false,
+      "ticks": false,
+      "tickCount": 5
+    }
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "field": "year"},
+          "width": {"scale": "x", "band": 1, "offset": 0},
+          "y": {"scale": "y", "field": "value"},
+          "y2": {"scale": "y", "value": 0},
+          "cornerRadius": {"value": 0},
+          "opacity": {"value": 0.8}
+        },
+        "update": {
+          "fill": {"signal": "datum.value > datum.meta ? '#5A9591' : '#D06A8A'"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "field": "year", "offset": -10},
+          "x2": {"scale": "x", "field": "year", "band": 1, "offset": 10},
+          "y": {"scale": "y", "field": "meta"},
+          "stroke": {"value": "#FF9900"},
+          "strokeDash": {"value": [5, 1]},
+          "strokeWidth": {"value": 2}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "field": "year", "offset": -10.8},
+          "x2": {"scale": "x", "field": "year", "band": 1, "offset": 10},
+          "y": {"scale": "y", "field": "meta", "offset": 3},
+          "stroke": {"value": "gray"},
+          "strokeOpacity": {"value": 0.2},
+          "strokeDash": {"value": [5, 1]},
+          "strokeWidth": {"value": 2.5}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "band": 0.5, "field": "year"},
+          "y": {"scale": "y", "field": "value"},
+          "text": {"signal": "format(datum.value, ',.0f')"},
+          "fontSize": {"value": 10},
+          "dy": {"value": -4},
+          "align": {"value": "center"}
+        },
+        "update": {
+          "fill": {"signal": "datum.value > datum.meta ? '#5A9591' : '#D06A8A'"}
+        }
+      }
+    }
+  ],
+  "legends": [
+    {
+      "fill": "leg",
+      "title": "",
+      "orient": "top",
+      "offset": 20,
+      "labelColor": {"value": "orange"},
+      "encode": {
+        "symbols": {
+          "update": {
+            "strokeWidth": {"value": 2},
+            "shape": {"value": "stroke"},
+            "opacity": {"value": 1},
+            "labelColor": {"value": "#FF9900"},
+            "size": {"value": 300},
+            "stroke": {"value": "#FF9900"},
+            "strokeDash": {"value": [5, 1]},
+            "layout": {"top": {"anchor": "middle"}}
+          }
+        }
+      }
+    }
+  ],
+  "config": {
+    "locale": {
+      "number": {
+        "decimal": ",",
+        "thousands": ".",
+        "grouping": [3],
+        "currency": ["", "R$"]
+      }
+    }
+  }
+}
